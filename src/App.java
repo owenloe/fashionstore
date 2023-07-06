@@ -201,7 +201,7 @@ public class App {
 
     order.setOrderID(orderID);
     order.setKaryawan(karyawanName);
-
+    order.setDetailOrderList(new ArrayList<>()); //trying fix latest
     // Add the order to the orderList
     orderList.add(order);
     System.out.println("Order added successfully!");
@@ -335,120 +335,124 @@ public static void viewProduk() {
     public static void addDetailOrder() {
     viewOrder();
 
-    Scanner scanner = new Scanner(System.in);
-
-    System.out.print("Enter Order ID: ");
+     System.out.print("Enter the Order ID: ");
     String orderID = scanner.nextLine();
+    viewProduk();
+    // Find the order in the orderList based on the ID
+    Order selectedOrder = null;
+    for (Order order : orderList) {
+        if (order.getOrderID().equals(orderID)) {
+            selectedOrder = order;
+            break;
+        }
+    }
 
-    // Create an ArrayList to store the products
-    ArrayList<DetailOrder> detailOrderList = new ArrayList<>();
+    if (selectedOrder != null) {
+        // Prompt for detail order information
 
-    // Prompt the user to add products
-    boolean addMoreProducts = true;
-    while (addMoreProducts) {
-        viewProduk();
+        System.out.print("Enter the product ID: ");
+        String productID = scanner.nextLine();
+        System.out.print("Enter the quantity: ");
+        int quantity = scanner.nextInt();
 
-        System.out.print("Enter the ID of the product: ");
-        String idProduk = scanner.nextLine();
-
+        // Retrieve the product information from the produkList based on the ID
         Produk selectedProduk = null;
         for (Produk produk : produkList) {
-            if (produk.getIdProduk().equals(idProduk)) {
+            if (produk.getIdProduk().equals(productID)) {
                 selectedProduk = produk;
                 break;
             }
         }
 
         if (selectedProduk != null) {
-            System.out.println("Selected Product: " + selectedProduk.getNamaProduk());
-
-            System.out.print("Enter Quantity: ");
-            int quantity = scanner.nextInt();
-            scanner.nextLine(); // Consume the newline character
-
-            // Check if the entered quantity is available in stock
-            if (quantity > selectedProduk.getStokProduk()) {
-                System.out.println("Insufficient stock available.");
-                continue; // Skip adding this product to the order
-            }
-
+            // Calculate the total price for the detail order
             int hargaSatuan = selectedProduk.getHargaProduk();
-            int hargaTotal = quantity * hargaSatuan;
+            int hargaTotal = hargaSatuan * quantity;
 
-            // Deduct the quantity from the stock of the selected product
-            selectedProduk.setStokProduk(selectedProduk.getStokProduk() - quantity);
+            // Create a new DetailOrder object
+            DetailOrder detailOrder = new DetailOrder(orderID, productID, quantity, hargaSatuan, hargaTotal);
 
-            // Create a new DetailOrder object for the current product and add it to the products ArrayList
-            DetailOrder detailOrder = new DetailOrder(orderID, idProduk, quantity, hargaSatuan, hargaTotal);
-            detailOrderList.add(detailOrder);
+            // Add the detail order to the order's detail order list
+            selectedOrder.getDetailOrderList().add(detailOrder);
+
+            System.out.println("Detail order added successfully!");
         } else {
             System.out.println("Invalid product ID.");
         }
-
-        System.out.print("Add another product? (yes/no): ");
-        String choice = scanner.nextLine();
-
-        if (choice.equalsIgnoreCase("no")) {
-            addMoreProducts = false;
-        }
+    } else {
+        System.out.println("Invalid Order ID. Order not found.");
     }
-
-    // Calculate the total harga for the order based on the detailOrderList
-    int hargaTotal = 0;
-    for (DetailOrder detailOrder : detailOrderList) {
-        hargaTotal += detailOrder.getHargaTotal();
-    }
-
-    // Find the order in the orderList based on the orderID and update the hargaTotal
-    for (Order order : orderList) {
-        if (order.getOrderID().equals(orderID)) {
-            order.setHargaTotal(hargaTotal);
-            break;
-        }
-    }
-
-    System.out.println("Detail Order added successfully!");
 }
 public static void viewDetailOrder() {
     viewOrder();
 
-    System.out.print("Enter Order ID: ");
+    System.out.print("Enter the Order ID: ");
     String orderID = scanner.nextLine();
 
-    boolean found = false;
-
+    // Find the order in the orderList based on the ID
+    Order selectedOrder = null;
     for (Order order : orderList) {
-        if (order.getOrderID().equals(orderID)) {
-            found = true;
-            List<DetailOrder> detailOrderList = order.getDetailOrderList(); //BINGUNG
-
-            if (detailOrderList.isEmpty()) {
-                System.out.println("No Detail Orders found for this order.");
-            } else {
-                System.out.println("Detail Orders:");
-                System.out.println("--------------------------------------------------------");
-                System.out.printf("| %-5s | %-10s | %-8s | %-12s | %-10s |\n",
-                        "No", "Product ID", "Quantity", "Unit Price", "Total Price");
-                int index = 1;
-                for (DetailOrder detailOrder : detailOrderList) {
-                    System.out.printf("| %-5d | %-10s | %-8d | %-12d | %-10d |\n",
-                            index++, detailOrder.getIdProduk(), detailOrder.getQuantity(),
-                            detailOrder.getHargaSatuan(), detailOrder.getHargaTotal());
-                }
-                System.out.println("--------------------------------------------------------");
-
-                // Calculate the grand total
-                int grandTotal = order.getHargaTotal();
-                System.out.println("Grand Total: " + grandTotal);
-            }
+        if (order.getOrderID().equalsIgnoreCase(orderID)) {
+            selectedOrder = order;
             break;
         }
     }
 
-    if (!found) {
+    if (selectedOrder != null) {
+        List<DetailOrder> detailOrderList = selectedOrder.getDetailOrderList();
+
+        if (detailOrderList.isEmpty()) {
+            System.out.println("No detail orders found for the given Order ID.");
+        } else {
+            System.out.println("--------------------------------------------------------");
+            System.out.println("Detail Orders:");
+            System.out.println("--------------------------------------------------------");
+            System.out.printf("| %-8s | %-10s | %-8s | %-12s | %-10s |\n",
+                    "Order ID", "Product ID", "Quantity", "Unit Price", "Total Price");
+
+            for (DetailOrder detailOrder : detailOrderList) {
+                System.out.printf("| %-8s | %-10s | %-8d | %-12d | %-10d |\n",
+                        detailOrder.getOrderID(), detailOrder.getIdProduk(),
+                        detailOrder.getQuantity(), detailOrder.getHargaSatuan(),
+                        detailOrder.getHargaTotal());
+            }
+
+            System.out.println("--------------------------------------------------------");
+        }
+    } else {
         System.out.println("Invalid Order ID. Order not found.");
     }
 }
+
+public static Customer findCustomerByNameAndPhoneNumber(String name, String phoneNumber) {
+        for (Customer customer : customerList) {
+            if (customer.getCustomerName().equals(name) && customer.getCustomerPhoneNumber().equals(phoneNumber)) {
+                return customer;
+            }
+        }
+        return null;
+    }
+
+public static Produk findProductByName(String name) {
+        for (Produk product : produkList) {
+            if (product.getProductName().equals(name)) {
+                return product;
+            }
+        }
+        return null;
+    }
+ public static Order findOrderByID(String orderID) {
+        for (Order order : orderList) {
+            if (order.getOrderID().equals(orderID)) {
+                return order;
+            }
+        }
+        return null;
+    }
+public static String generateOrderID() {
+        int nextOrderNumber = orderList.size() + 1;
+        return "ORD-" + String.format("%04d", nextOrderNumber);
+    }
 }
 
 

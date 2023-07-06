@@ -94,5 +94,8 @@ public class Produk {
     public void setUkuranProduk(String ukuranProduk) {
         this.ukuranProduk = ukuranProduk;
     }
+    public Object getProductName() {
+        return null;
+    }
 
 }
