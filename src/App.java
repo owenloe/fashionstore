@@ -38,7 +38,8 @@ public class App {
             System.out.println("9. View Produk");
             System.out.println("10. View Order");
             System.out.println("11. View Detail Order");
-            System.out.println("12. Exit");
+            System.out.println("12. View Settlement");
+            System.out.println("13. Exit");
             System.out.print("Enter your choice: ");
 
 
@@ -88,13 +89,15 @@ public class App {
                     viewDetailOrder();
                     break;
                 case 12:
+                    viewSettlement();
+                case 13:
                     System.out.println("Exiting...");
                     break;
                 default:
                     System.out.println("Invalid choice. Please enter a valid menu option.");
             }
             //scanner.nextLine(); try fix, original active
-        } while (choice != 12);
+        } while (choice != 13);
         scanner.close(); //TRY FIX
     }
 
@@ -481,7 +484,7 @@ public static void addSettlement() {
                 String method = scanner.nextLine();
 
                 Settlement settlement = new Settlement(orderID, status, method);
-
+                settlementList.add(settlement);
                 // Perform any necessary operations with the settlement object, such as adding it to a list or saving it to a database
 
                 System.out.println("Settlement added successfully!");
@@ -491,6 +494,56 @@ public static void addSettlement() {
         } else {
             System.out.println("Order not found!");
         }
+    }
+
+    public static void viewSettlement(){
+        //viewDetailOrder();
+        if (settlementList.isEmpty()) { //INI CODE BUAT BISA PILIH MAU INDEX YANG MANA DI PRINT
+        System.out.println("No Settlement found.");
+    } else {
+        System.out.println("--------------------------------------------------------");
+        System.out.println("Settlements:");
+        System.out.println("--------------------------------------------------------");
+
+        for (int i = 0; i < settlementList.size(); i++) {
+            Settlement settlement = settlementList.get(i);
+            System.out.println((i + 1) + ". Order ID: " + settlement.getOrderID());
+        }
+
+        System.out.println("--------------------------------------------------------");
+        System.out.print("Enter the Index of the settlement to view: ");
+        int settlementNumber = scanner.nextInt();
+        scanner.nextLine(); // Consume the newline character
+
+        if (settlementNumber >= 1 && settlementNumber <= settlementList.size()) {
+            Settlement settlement = settlementList.get(settlementNumber - 1);
+            System.out.println("--------------------------------------------------------");
+            System.out.println("Settlement Details:");
+            System.out.println("--------------------------------------------------------");
+            System.out.println("Order ID: " + settlement.getOrderID());
+            System.out.println("Settlement Status: " + settlement.getStatus());
+            System.out.println("Settlement Method: " + settlement.getMetode());
+            System.out.println("----------------------------------------");
+        } else {
+            System.out.println("Invalid settlement number.");
+        }
+    }
+
+//         if (settlementList.isEmpty()){ //INI BUAT AUTO PRINT ALL SETTLEMENTS TANPA PILIH
+//             System.out.println("No settlements found!");
+//         } else {
+//             System.out.println("--------------------------------------------------------");
+//             System.out.println("Settlements:");
+//             System.out.println("--------------------------------------------------------");
+        
+//             for (Settlement settlement : settlementList) {
+//                 System.out.println("Order ID: " + settlement.getOrderID());
+//                 System.out.println("Settlement Status: " + settlement.getStatus());
+//                 System.out.println("Settlement Method: "+ settlement.getMetode());
+//               //System.out.println("Total Settlement: " + DetailOrder.getHargaTotal());
+//                 System.out.println("----------------------------------------");
+//     }
+// }
     }
 }
 
