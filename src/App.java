@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -44,11 +45,16 @@ public class App {
 
 
         if (scanner.hasNextInt()) {
+            try {
         choice = scanner.nextInt();
         scanner.nextLine(); // Consume the newline character
-    } else {
+    } catch (NoSuchElementException e){
+        System.out.println("Invalid choice. Please enter a valid menuAAA option." + e.getMessage());
+        scanner.nextLine(); // Consume the invalid input
+        continue; // Restart the loop
+    }
+} else {
         System.out.println("Invalid choice. Please enter a valid menu option.");
-        
         scanner.nextLine(); // Consume the invalid input
         continue; // Restart the loop
     }
@@ -105,6 +111,7 @@ public class App {
     public static void addCustomer() {
         Scanner scanner = new Scanner(System.in);
 
+        try{
         System.out.print("Enter customer name: ");
         String name = scanner.nextLine();
         System.out.print("Enter customer phone number: ");
@@ -118,8 +125,10 @@ public class App {
         Customer customer = new Customer(name, phoneNumber, email, address);
         customerList.add(customer);
         System.out.println("Customer added successfully!");
+    } catch (NoSuchElementException e){
+        System.out.println("Error occurred while adding customer: " + e.getMessage());
     }
-
+}
     public static void viewCustomer() {
         if (customerList.isEmpty()) {
             System.out.println("No Customer found.");
@@ -153,12 +162,13 @@ public class App {
     // Prompt for customer selection
     System.out.print("Select a customer: ");
     int selectedCustomerIndex;
-
-    if (scanner.hasNextInt()) {
+    
+    try {
+    //if (scanner.hasNextInt()) {
         selectedCustomerIndex = scanner.nextInt();
-    } else {
+    } catch (InputMismatchException e) {
         System.out.println("Invalid input. Please enter a valid integer.");
-        scanner.close();
+        scanner.nextLine();
         return;
     }
 
@@ -240,7 +250,8 @@ public static void viewOrder() {
 
     public static void addProduk() {
     Scanner scanner = new Scanner(System.in);
-
+    
+    try{
     System.out.print("Enter product brand: ");
     String merkProduk = scanner.nextLine();
     System.out.print("Enter product name: ");
@@ -267,8 +278,11 @@ public static void viewOrder() {
     produk.setIdProduk(idProduk);
     // Add the produk to the ArrayList
     produkList.add(produk);
-
+    
     System.out.println("Produk added successfully!");
+ } catch (Exception e){
+    System.out.println("Error occurred while adding product: " + e.getMessage());
+    }
 }
 
 public static void viewProduk() {
