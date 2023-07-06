@@ -12,13 +12,14 @@ import java.time.LocalTime; // import the LocalTime class
 import java.time.format.DateTimeFormatter;
 
 public class App {
+    static Scanner scanner = new Scanner(System.in); //tryfix
     static ArrayList<Customer> customerList = new ArrayList<>();
     static ArrayList<Produk> produkList = new ArrayList<>();
     static ArrayList<Karyawan> karyawanList = new ArrayList<>();
     static ArrayList<Order> orderList = new ArrayList<>();
 
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        //Scanner scanner = new Scanner(System.in);
         Integer choice = 0;
 
         do {
@@ -38,7 +39,7 @@ public class App {
             System.out.print("Enter your choice: ");
 
 
-            if (scanner.hasNextInt()) {
+        if (scanner.hasNextInt()) {
         choice = scanner.nextInt();
         scanner.nextLine(); // Consume the newline character
     } else {
@@ -59,7 +60,8 @@ public class App {
                     addProduk();
                     break;
                 case 4:
-                    addOrder();
+                    addOrder(); //TRY FIX
+                    //scanner.nextLine(); //try fix
                     break;
                 case 5:
                     addDetailOrder();
@@ -88,9 +90,9 @@ public class App {
                 default:
                     System.out.println("Invalid choice. Please enter a valid menu option.");
             }
+            //scanner.nextLine(); try fix, original active
         } while (choice != 12);
-
-        scanner.close();
+        scanner.close(); //TRY FIX
     }
 
 
@@ -109,6 +111,7 @@ public class App {
         // Create a new Customer object and add it to the customerList ArrayList
         Customer customer = new Customer(name, phoneNumber, email, address);
         customerList.add(customer);
+        System.out.println("Customer added successfully!");
     }
 
     public static void viewCustomer() {
@@ -129,8 +132,8 @@ public class App {
     }
 
 
-    public static void addOrder() {
-    Scanner scanner = new Scanner(System.in);
+    public static void addOrder() { //try fix  original nothing inside
+    //Scanner scanner = new Scanner(System.in); //try fix
 
     LocalTime localTime = LocalTime.now();
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss");
@@ -168,9 +171,9 @@ public class App {
     scanner.nextLine(); // Consume the newline character after reading the integer
 
     System.out.print("Enter the ID of the karyawan: ");
-    String selectedKaryawanID = scanner.nextLine();
-
-    String karyawanName = "";
+    String selectedKaryawanID = scanner.nextLine(); //TRY FIX
+    //scanner.nextLine(); //trying fix add nextline convert up to next
+    String karyawanName = " ";
 
     // Find the karyawan in the karyawanList based on the ID
     Karyawan selectedKaryawan = null;
@@ -186,10 +189,11 @@ public class App {
         karyawanName = selectedKaryawan.getNamaKaryawan();
     } else {
         System.out.println("Invalid karyawan ID.");
-        scanner.close();
+        //scanner.close();
         return;
     }
-
+    
+    scanner.nextLine(); //fix error //edit: doesnt work.
     Integer hargaTotal = null;
 
     Order order = new Order(orderID, customerName, customerPhoneNumber, tanggalPesanan, hargaTotal, karyawanName);
@@ -201,7 +205,7 @@ public class App {
     orderList.add(order);
     System.out.println("Order added successfully!");
 
-    scanner.close();
+   // scanner.close();
 }
 
 
