@@ -1,5 +1,7 @@
 package model;
 
+import java.util.List;
+
 public class DetailOrder {
     private String orderID;
     private String idProduk;
@@ -60,3 +62,4 @@ public class DetailOrder {
     }
 
 }
+

@@ -17,6 +17,7 @@ public class App {
     static ArrayList<Produk> produkList = new ArrayList<>();
     static ArrayList<Karyawan> karyawanList = new ArrayList<>();
     static ArrayList<Order> orderList = new ArrayList<>();
+    static ArrayList<DetailOrder> detailOrderList = new ArrayList<>();
 
     public static void main(String[] args) {
         //Scanner scanner = new Scanner(System.in);
@@ -79,10 +80,10 @@ public class App {
                     viewProduk();
                     break;
                 case 10:
-                    //viewOrder();
+                    viewOrder();
                     break;
                 case 11:
-                    //viewDetailOrder();
+                    viewDetailOrder();
                     break;
                 case 12:
                     System.out.println("Exiting...");
@@ -193,7 +194,7 @@ public class App {
         return;
     }
     
-    scanner.nextLine(); //fix error //edit: doesnt work.
+    //scanner.nextLine(); //fix error //edit: doesnt work.
     Integer hargaTotal = null;
 
     Order order = new Order(orderID, customerName, customerPhoneNumber, tanggalPesanan, hargaTotal, karyawanName);
@@ -207,6 +208,29 @@ public class App {
 
    // scanner.close();
 }
+
+public static void viewOrder() {
+    if (orderList.isEmpty()) {
+        System.out.println("No Order found.");
+    } else {
+        System.out.println("--------------------------------------------------------");
+        System.out.println("Available Orders:");
+        System.out.println("--------------------------------------------------------");
+        System.out.printf("| %-8s | %-20s | %-15s | %-15s | %-15s | %-12s |\n",
+                "Order ID", "Customer Name", "Phone Number", "Tanggal Pesanan", "Karyawan", "Total Price");
+
+        for (Order order : orderList) {
+            System.out.printf("| %-8s | %-20s | %-15s | %-15s | %-15s | %-12d |\n",
+                    order.getOrderID(), order.getCustomerName(),
+                    order.getCustomerPhoneNumber(), order.getTanggalPesanan(),
+                    order.getKaryawan(), order.getHargaTotal());
+        }
+
+        System.out.println("--------------------------------------------------------");
+    }
+}
+
+
 
 
     public static void addProduk() {
@@ -309,6 +333,8 @@ public static void viewProduk() {
         
     }
     public static void addDetailOrder() {
+    viewOrder();
+
     Scanner scanner = new Scanner(System.in);
 
     System.out.print("Enter Order ID: ");
@@ -383,38 +409,50 @@ public static void viewProduk() {
 
     System.out.println("Detail Order added successfully!");
 }
-public static void viewDetailOrder(ArrayList<DetailOrder> detailOrderList) {
-    Scanner scanner = new Scanner(System.in);
+public static void viewDetailOrder() {
+    viewOrder();
 
     System.out.print("Enter Order ID: ");
     String orderID = scanner.nextLine();
 
-    // Find the detailOrderList for the selected orderID
-    ArrayList<DetailOrder> selectedDetailOrderList = new ArrayList<>();
-    for (DetailOrder detailOrder : detailOrderList) {
-        if (detailOrder.getOrderID().equals(orderID)) {
-            selectedDetailOrderList.add(detailOrder);
+    boolean found = false;
+
+    for (Order order : orderList) {
+        if (order.getOrderID().equals(orderID)) {
+            found = true;
+            List<DetailOrder> detailOrderList = order.getDetailOrderList();
+
+            if (detailOrderList.isEmpty()) {
+                System.out.println("No Detail Orders found for this order.");
+            } else {
+                System.out.println("Detail Orders:");
+                System.out.println("--------------------------------------------------------");
+                System.out.printf("| %-5s | %-10s | %-8s | %-12s | %-10s |\n",
+                        "No", "Product ID", "Quantity", "Unit Price", "Total Price");
+                int index = 1;
+                for (DetailOrder detailOrder : detailOrderList) {
+                    System.out.printf("| %-5d | %-10s | %-8d | %-12d | %-10d |\n",
+                            index++, detailOrder.getIdProduk(), detailOrder.getQuantity(),
+                            detailOrder.getHargaSatuan(), detailOrder.getHargaTotal());
+                }
+                System.out.println("--------------------------------------------------------");
+
+                // Calculate the grand total
+                int grandTotal = order.getHargaTotal();
+                System.out.println("Grand Total: " + grandTotal);
+            }
+            break;
         }
     }
 
-    if (!selectedDetailOrderList.isEmpty()) {
-        // Print the detail orders
-        System.out.println("Detail Order List for Order ID: " + orderID);
-        for (DetailOrder detailOrder : selectedDetailOrderList) {
-            System.out.println("Product ID: " + detailOrder.getIdProduk() +
-                    ", Quantity: " + detailOrder.getQuantity() +
-                    ", Harga Satuan: " + detailOrder.getHargaSatuan() +
-                    ", Harga Total: " + detailOrder.getHargaTotal());
-        }
-
-        // Calculate and display the grand total
-        int grandTotal = 0;
-        for (DetailOrder detailOrder : selectedDetailOrderList) {
-            grandTotal += detailOrder.getHargaTotal();
-        }
-        System.out.println("Grand Total: " + grandTotal);
-    } else {
-        System.out.println("No detail orders found for Order ID: " + orderID);
+    if (!found) {
+        System.out.println("Invalid Order ID. Order not found.");
     }
 }
 }
+
+
+
+
+
+
