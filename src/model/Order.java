@@ -1,5 +1,6 @@
 package model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Order {
@@ -9,10 +10,11 @@ public class Order {
     private String karyawan;
     private String customerName;
     private String customerPhoneNumber;
-
+    private List<DetailOrder> detailOrderList;
     
 
     public Order() {
+        detailOrderList = new ArrayList<>();
     }
 
     public Order(String orderID, String customerName, String customerPhoneNumber, String tanggalPesanan, Integer hargaTotal, String karyawan) {
@@ -22,6 +24,7 @@ public class Order {
         this.tanggalPesanan = tanggalPesanan;
         this.hargaTotal = hargaTotal;
         this.karyawan = karyawan;
+        detailOrderList = new ArrayList<>();
     }
 
    // public String getDetailOrderList(){
@@ -31,6 +34,14 @@ public class Order {
     //public String setDetailOrderList(){
      //   this.
     //}
+
+    public List<DetailOrder> getDetailOrderList() {
+        return detailOrderList;
+    }
+
+    public void setDetailOrderList(List<DetailOrder> detailOrderList) {
+        this.detailOrderList = detailOrderList;
+    }
     public String getOrderID() {
         return orderID;
     }
@@ -79,6 +90,14 @@ public class Order {
         this.karyawan = karyawan;
     }
 
+     public void addDetailOrder(DetailOrder detailOrder) {
+        detailOrderList.add(detailOrder);
+    }
+    
+    public void removeDetailOrder(DetailOrder detailOrder) {
+        detailOrderList.remove(detailOrder);
+    }
+
     @Override
     public String toString() {
         return "{" +
@@ -88,6 +107,7 @@ public class Order {
                 ", tanggalPesanan='" + tanggalPesanan + "'" +
                 ", hargaTotal='" + hargaTotal + "'" +
                 ", karyawan='" + karyawan + "'" +
+                ", detailOrderList='" + detailOrderList + "'" +
                 "}";
     }
 
