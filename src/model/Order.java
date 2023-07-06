@@ -10,6 +10,8 @@ public class Order {
     private String customerName;
     private String customerPhoneNumber;
 
+    
+
     public Order() {
     }
 
@@ -22,6 +24,13 @@ public class Order {
         this.karyawan = karyawan;
     }
 
+   // public String getDetailOrderList(){
+        //return 
+   // }
+
+    //public String setDetailOrderList(){
+     //   this.
+    //}
     public String getOrderID() {
         return orderID;
     }

@@ -18,7 +18,7 @@ public class App {
     static ArrayList<Karyawan> karyawanList = new ArrayList<>();
     static ArrayList<Order> orderList = new ArrayList<>();
     static ArrayList<DetailOrder> detailOrderList = new ArrayList<>();
-
+    
     public static void main(String[] args) {
         //Scanner scanner = new Scanner(System.in);
         Integer choice = 0;
@@ -420,7 +420,7 @@ public static void viewDetailOrder() {
     for (Order order : orderList) {
         if (order.getOrderID().equals(orderID)) {
             found = true;
-            List<DetailOrder> detailOrderList = order.getDetailOrderList();
+            List<DetailOrder> detailOrderList = order.getDetailOrderList(); //BINGUNG
 
             if (detailOrderList.isEmpty()) {
                 System.out.println("No Detail Orders found for this order.");
@@ -450,6 +450,7 @@ public static void viewDetailOrder() {
     }
 }
 }
+
 
 
 
