@@ -277,18 +277,20 @@ public static void viewProduk() {
     } else {
         System.out.println("Produk List:");
         System.out.println("--------------------------------------------------------");
-        System.out.println("Available Produk:");
-        System.out.println("--------------------------------------------------------");
-        System.out.printf("| %-5s | %-20s | %-15s | %-10s |\n", "ID", "Nama Produk", "Harga Satuan", "Stok Produk");
+        System.out.printf("| %-5s | %-10s | %-20s | %-15s | %-15s | %-10s | %-10s |\n",
+                "ID", "Brand", "Nama Produk", "Harga Satuan", "Stok Produk", "Warna", "Ukuran");
 
-        for (int i = 0; i < produkList.size(); i++) {
-            Produk produk = produkList.get(i);
-            System.out.printf("| %-5s | %-20s | %-15d | %-10d |\n", produk.getIdProduk(), produk.getNamaProduk(), produk.getHargaProduk(), produk.getStokProduk());
+        for (Produk produk : produkList) {
+            System.out.printf("| %-5s | %-10s | %-20s | %-15d | %-15d | %-10s | %-10s |\n",
+                    produk.getIdProduk(), produk.getMerkProduk(), produk.getNamaProduk(),
+                    produk.getHargaProduk(), produk.getStokProduk(), produk.getWarnaProduk(),
+                    produk.getUkuranProduk());
         }
 
         System.out.println("--------------------------------------------------------");
     }
 }
+
 
 
 
