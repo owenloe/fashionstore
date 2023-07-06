@@ -7,6 +7,7 @@ import model.DetailOrder;
 import model.Karyawan;
 import model.Order;
 import model.Produk;
+import model.Settlement;
 
 import java.time.LocalTime; // import the LocalTime class
 import java.time.format.DateTimeFormatter;
@@ -18,6 +19,7 @@ public class App {
     static ArrayList<Karyawan> karyawanList = new ArrayList<>();
     static ArrayList<Order> orderList = new ArrayList<>();
     static ArrayList<DetailOrder> detailOrderList = new ArrayList<>();
+    static ArrayList<Settlement> settlementList = new ArrayList<>();
     
     public static void main(String[] args) {
         //Scanner scanner = new Scanner(System.in);
@@ -68,7 +70,7 @@ public class App {
                     addDetailOrder();
                     break;
                 case 6:
-                    //addSettlement();
+                    addSettlement();
                     break;
                 case 7:
                     viewCustomer();
@@ -453,10 +455,44 @@ public static String generateOrderID() {
         int nextOrderNumber = orderList.size() + 1;
         return "ORD-" + String.format("%04d", nextOrderNumber);
     }
+
+public static void addSettlement() {
+    viewOrder();
+
+    System.out.print("Enter the Order ID: ");
+    String orderID = scanner.nextLine();
+
+        // Find the order in the orderList based on the ID
+        Order selectedOrder = null;
+        for (Order order : orderList) {
+            if (order.getOrderID().equals(orderID)) {
+                selectedOrder = order;
+                break;
+            }
+        }
+
+        if (selectedOrder != null) {
+            System.out.print("Enter the Settlement Status (Pending/Completed): ");
+            String status = scanner.nextLine();
+
+            // Validate the status
+            if (status.equalsIgnoreCase("Pending") || status.equalsIgnoreCase("Completed")) {
+                System.out.print("Enter the Settlement Method: ");
+                String method = scanner.nextLine();
+
+                Settlement settlement = new Settlement(orderID, status, method);
+
+                // Perform any necessary operations with the settlement object, such as adding it to a list or saving it to a database
+
+                System.out.println("Settlement added successfully!");
+            } else {
+                System.out.println("Invalid status! The status should be either 'Pending' or 'Completed'.");
+            }
+        } else {
+            System.out.println("Order not found!");
+        }
+    }
 }
-
-
-
 
 
 
