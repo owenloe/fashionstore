@@ -210,7 +210,7 @@ public class App {
     }
     
     //scanner.nextLine(); //fix error //edit: doesnt work.
-    Integer hargaTotal = null;
+    Integer hargaTotal = 0;
 
     Order order = new Order(orderID, customerName, customerPhoneNumber, tanggalPesanan, hargaTotal, karyawanName);
 
@@ -354,56 +354,68 @@ public static void viewProduk() {
         
     }
     public static void addDetailOrder() {
-    viewOrder();
-
-     System.out.print("Enter the Order ID: ");
-    String orderID = scanner.nextLine();
-    viewProduk();
-    // Find the order in the orderList based on the ID
-    Order selectedOrder = null;
-    for (Order order : orderList) {
-        if (order.getOrderID().equals(orderID)) {
-            selectedOrder = order;
-            break;
-        }
-    }
-
-    if (selectedOrder != null) {
-        // Prompt for detail order information
-
-        System.out.print("Enter the product ID: ");
-        String productID = scanner.nextLine();
-        System.out.print("Enter the quantity: ");
-        int quantity = scanner.nextInt();
-
-        // Retrieve the product information from the produkList based on the ID
-        Produk selectedProduk = null;
-        for (Produk produk : produkList) {
-            if (produk.getIdProduk().equals(productID)) {
-                selectedProduk = produk;
+        viewOrder();
+    
+        System.out.print("Enter the Order ID: ");
+        String orderID = scanner.nextLine();
+        viewProduk();
+    
+        // Find the order in the orderList based on the ID
+        Order selectedOrder = null;
+        for (Order order : orderList) {
+            if (order.getOrderID().equals(orderID)) {
+                selectedOrder = order;
                 break;
             }
         }
+    
+        if (selectedOrder != null) {
+            boolean addMoreProducts = true;
+    
+            while (addMoreProducts) {
+                System.out.print("Enter the product ID: ");
+                String productID = scanner.nextLine();
+                System.out.print("Enter the quantity: ");
+                int quantity = scanner.nextInt();
+                scanner.nextLine();
+    
+                // Retrieve the product information from the produkList based on the ID
+                Produk selectedProduk = null;
+                for (Produk produk : produkList) {
+                    if (produk.getIdProduk().equals(productID)) {
+                        selectedProduk = produk;
+                        break;
+                    }
+                }
+    
+                if (selectedProduk != null) {
+                    // Calculate the total price for the detail order
+                    int hargaSatuan = selectedProduk.getHargaProduk();
+                    int hargaTotal = hargaSatuan * quantity;
+    
+                    // Create a new DetailOrder object
+                    DetailOrder detailOrder = new DetailOrder(orderID, productID, quantity, hargaSatuan, hargaTotal);
+    
+                    // Add the detail order to the order's detail order list
+                    
+                    selectedOrder.getDetailOrderList().add(detailOrder);
 
-        if (selectedProduk != null) {
-            // Calculate the total price for the detail order
-            int hargaSatuan = selectedProduk.getHargaProduk();
-            int hargaTotal = hargaSatuan * quantity;
-
-            // Create a new DetailOrder object
-            DetailOrder detailOrder = new DetailOrder(orderID, productID, quantity, hargaSatuan, hargaTotal);
-
-            // Add the detail order to the order's detail order list
-            selectedOrder.getDetailOrderList().add(detailOrder);
-
-            System.out.println("Detail order added successfully!");
+                    selectedOrder.setHargaTotal(selectedOrder.getHargaTotal() + hargaTotal);
+    
+                    System.out.println("Detail order added successfully!");
+    
+                    System.out.print("Do you want to add more products? (Y/N): ");
+                    String choice = scanner.nextLine();
+                    addMoreProducts = choice.equalsIgnoreCase("Y");
+                } else {
+                    System.out.println("Invalid product ID.");
+                }
+            }
         } else {
-            System.out.println("Invalid product ID.");
+            System.out.println("Invalid Order ID. Order not found.");
         }
-    } else {
-        System.out.println("Invalid Order ID. Order not found.");
     }
-}
+    
 public static void viewDetailOrder() {
     viewOrder();
 
